@@ -48,6 +48,12 @@ AC_ARG_ENABLE([mpls-kernel],
   [enable_mpls_kernel=try]
 )
 
+AC_ARG_ENABLE([wireguard],
+  [AS_HELP_STRING([--enable-wireguard], [enable WireGuard interface support @<:@yes@:>@])],
+  [],
+  [enable_wireguard=yes]
+)
+
 AC_ARG_WITH([protocols],
   [AS_HELP_STRING([--with-protocols=LIST], [include specified routing protocols @<:@all@:>@])],
   [],
@@ -139,6 +145,10 @@ fi
 
 # This is assumed to be necessary for proper BIRD build
 CFLAGS="$CFLAGS -fno-strict-aliasing -fno-strict-overflow"
+
+if test "$enable_wireguard" != no ; then
+  AC_DEFINE([WITH_WIREGUARD], [1], [Define to 1 if WireGuard is enabled])
+fi
 
 if test "$bird_cflags_default" = yes ; then
   BIRD_CHECK_GCC_OPTION([bird_cv_c_option_wno_pointer_sign], [-Wno-pointer-sign], [-Wall])
@@ -452,6 +462,7 @@ AC_MSG_RESULT([        Iproute2 directory:	$iproutedir])
 AC_MSG_RESULT([        System configuration:	$sysdesc])
 AC_MSG_RESULT([        Debugging:		$enable_debug])
 AC_MSG_RESULT([        POSIX threads:		$enable_pthreads])
+AC_MSG_RESULT([        WireGuard:		$enable_wireguard])
 AC_MSG_RESULT([        Routing protocols:	$protocols])
 AC_MSG_RESULT([        Kernel MPLS support:	$enable_mpls_kernel])
 AC_MSG_RESULT([        Client:			$enable_client])
